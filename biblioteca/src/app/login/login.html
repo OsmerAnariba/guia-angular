@@ -1,0 +1,13 @@
+<h2>Biblioteca - Iniciar sesión</h2>
+
+<label>Usuario</label>
+<input type="text" [(ngModel)]="usuario" />
+
+<label>Contraseña</label>
+<input type="password" [(ngModel)]="contrasena" />
+
+<button (click)="iniciarSesion()">Entrar</button>
+
+@if (mensaje) {
+  <p style="color: red">{{ mensaje }}</p>
+}
