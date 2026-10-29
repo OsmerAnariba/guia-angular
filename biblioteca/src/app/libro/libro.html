@@ -1,7 +1,7 @@
 <h2>Catálogo de libros</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
-<h3>Nuevo libro</h3>
+<h3>{{ idEditando === null ? 'Nuevo libro' : 'Editar libro (ID ' + idEditando + ')' }}</h3>
 
 <label>Código</label>
 <input type="text" [(ngModel)]="codigo" />
@@ -15,7 +15,11 @@
 <label>Año</label>
 <input type="number" [(ngModel)]="anio" />
 
-<button (click)="guardar()">Guardar</button>
+<button (click)="guardar()">{{ idEditando === null ? 'Guardar' : 'Actualizar' }}</button>
+
+@if (idEditando !== null) {
+  <button (click)="cancelar()">Cancelar</button>
+}
 
 @if (mensaje) {
   <p style="color: red">{{ mensaje }}</p>
@@ -34,6 +38,7 @@
         <th>Título</th>
         <th>Autor</th>
         <th>Año</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -44,6 +49,9 @@
           <td>{{ libro.titulo }}</td>
           <td>{{ libro.autor }}</td>
           <td>{{ libro.anio }}</td>
+          <td>
+            <button (click)="editar(libro)">Editar</button>
+          </td>
         </tr>
       }
     </tbody>

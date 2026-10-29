@@ -24,6 +24,7 @@ export class LibroComponent implements OnInit {
   autor = '';
   anio: number | null = null;
   mensaje = '';
+  idEditando: number | null = null;
 
   constructor(private router: Router) {}
 
@@ -62,19 +63,45 @@ export class LibroComponent implements OnInit {
       return;
     }
 
-    const nuevoId = this.libros.length
-      ? Math.max(...this.libros.map((l) => l.id)) + 1
-      : 1;
+    if (this.idEditando !== null) {
+      // Modo actualizar: se modifica el registro existente, mismo ID
+      const libro = this.libros.find((l) => l.id === this.idEditando);
+      if (libro) {
+        libro.codigo = this.codigo.trim();
+        libro.titulo = this.titulo.trim();
+        libro.autor = this.autor.trim();
+        libro.anio = this.anio;
+      }
+    } else {
+      // Modo crear: se agrega un registro nuevo con ID automático
+      const nuevoId = this.libros.length
+        ? Math.max(...this.libros.map((l) => l.id)) + 1
+        : 1;
 
-    this.libros.push({
-      id: nuevoId,
-      codigo: this.codigo.trim(),
-      titulo: this.titulo.trim(),
-      autor: this.autor.trim(),
-      anio: this.anio,
-    });
+      this.libros.push({
+        id: nuevoId,
+        codigo: this.codigo.trim(),
+        titulo: this.titulo.trim(),
+        autor: this.autor.trim(),
+        anio: this.anio,
+      });
+    }
 
     this.guardarEnStorage();
+    this.limpiar();
+  }
+
+  editar(libro: Libro) {
+    this.mensaje = '';
+    this.idEditando = libro.id;
+    this.codigo = libro.codigo;
+    this.titulo = libro.titulo;
+    this.autor = libro.autor;
+    this.anio = libro.anio;
+  }
+
+  cancelar() {
+    this.mensaje = '';
     this.limpiar();
   }
 
@@ -83,6 +110,7 @@ export class LibroComponent implements OnInit {
     this.titulo = '';
     this.autor = '';
     this.anio = null;
+    this.idEditando = null;
   }
 
   cerrarSesion() {
