@@ -1,9 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+interface Libro {
+  id: number;
+  codigo: string;
+  titulo: string;
+  autor: string;
+  anio: number;
+}
 
 @Component({
-  imports: [],
   selector: 'app-libro',
-  styleUrl: './libro.css',
+  imports: [],
   templateUrl: './libro.html',
+  styleUrl: './libro.css',
 })
-export class LibroComponent {}
+export class LibroComponent implements OnInit {
+  libros: Libro[] = [];
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    if (!localStorage.getItem('sesionBiblioteca')) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.cargar();
+  }
+
+  cargar() {
+    const datos = localStorage.getItem('librosBiblioteca');
+    this.libros = datos ? JSON.parse(datos) : [];
+  }
+
+  cerrarSesion() {
+    localStorage.removeItem('sesionBiblioteca');
+    this.router.navigate(['/login']);
+  }
+}
