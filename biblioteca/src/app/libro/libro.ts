@@ -64,7 +64,6 @@ export class LibroComponent implements OnInit {
     }
 
     if (this.idEditando !== null) {
-      // Modo actualizar: se modifica el registro existente, mismo ID
       const libro = this.libros.find((l) => l.id === this.idEditando);
       if (libro) {
         libro.codigo = this.codigo.trim();
@@ -73,7 +72,6 @@ export class LibroComponent implements OnInit {
         libro.anio = this.anio;
       }
     } else {
-      // Modo crear: se agrega un registro nuevo con ID automático
       const nuevoId = this.libros.length
         ? Math.max(...this.libros.map((l) => l.id)) + 1
         : 1;
@@ -98,6 +96,20 @@ export class LibroComponent implements OnInit {
     this.titulo = libro.titulo;
     this.autor = libro.autor;
     this.anio = libro.anio;
+  }
+
+  eliminar(id: number) {
+    if (!confirm('¿Eliminar este libro?')) {
+      return;
+    }
+
+    this.libros = this.libros.filter((l) => l.id !== id);
+    this.guardarEnStorage();
+
+    // Si se eliminó el libro que se estaba editando, se sale del modo edición
+    if (this.idEditando === id) {
+      this.limpiar();
+    }
   }
 
   cancelar() {
