@@ -1,6 +1,26 @@
 <h2>Catálogo de libros</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
+<h3>Nuevo libro</h3>
+
+<label>Código</label>
+<input type="text" [(ngModel)]="codigo" />
+
+<label>Título</label>
+<input type="text" [(ngModel)]="titulo" />
+
+<label>Autor</label>
+<input type="text" [(ngModel)]="autor" />
+
+<label>Año</label>
+<input type="number" [(ngModel)]="anio" />
+
+<button (click)="guardar()">Guardar</button>
+
+@if (mensaje) {
+  <p style="color: red">{{ mensaje }}</p>
+}
+
 <p>Total de registros: {{ libros.length }}</p>
 
 @if (libros.length === 0) {
