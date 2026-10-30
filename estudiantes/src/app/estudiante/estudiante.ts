@@ -1,9 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+interface Estudiante {
+  id: number;
+  cuenta: string;
+  nombre: string;
+  carrera: string;
+  fechaIngreso: string;
+}
 
 @Component({
-  imports: [],
   selector: 'app-estudiante',
-  styleUrl: './estudiante.css',
+  imports: [],
   templateUrl: './estudiante.html',
+  styleUrl: './estudiante.css',
 })
-export class EstudianteComponent {}
+export class EstudianteComponent implements OnInit {
+  estudiantes: Estudiante[] = [];
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    if (!localStorage.getItem('sesionEstudiantes')) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.cargar();
+  }
+
+  cargar() {
+    const datos = localStorage.getItem('registrosEstudiantes');
+    this.estudiantes = datos ? JSON.parse(datos) : [];
+  }
+
+  cerrarSesion() {
+    localStorage.removeItem('sesionEstudiantes');
+    this.router.navigate(['/login']);
+  }
+}
