@@ -1,1 +1,31 @@
-<p>producto works!</p>
+<h2>Inventario de productos</h2>
+<button (click)="cerrarSesion()">Cerrar sesión</button>
+
+<p>Total de registros: {{ productos.length }}</p>
+
+@if (productos.length === 0) {
+  <p>No hay productos registrados.</p>
+} @else {
+  <table border="1">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Existencias</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (producto of productos; track producto.id) {
+        <tr>
+          <td>{{ producto.id }}</td>
+          <td>{{ producto.codigo }}</td>
+          <td>{{ producto.nombre }}</td>
+          <td>L {{ producto.precio.toFixed(2) }}</td>
+          <td>{{ producto.existencias }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
