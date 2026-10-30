@@ -59,7 +59,6 @@ export class EstudianteComponent implements OnInit {
     }
 
     if (this.idEditando !== null) {
-      // Modo actualizar: mismo ID, misma cantidad de filas
       const estudiante = this.estudiantes.find((e) => e.id === this.idEditando);
       if (estudiante) {
         estudiante.cuenta = this.cuenta.trim();
@@ -68,7 +67,6 @@ export class EstudianteComponent implements OnInit {
         estudiante.fechaIngreso = this.fechaIngreso;
       }
     } else {
-      // Modo crear: ID automático
       const nuevoId = this.estudiantes.length
         ? Math.max(...this.estudiantes.map((e) => e.id)) + 1
         : 1;
@@ -93,6 +91,20 @@ export class EstudianteComponent implements OnInit {
     this.nombre = estudiante.nombre;
     this.carrera = estudiante.carrera;
     this.fechaIngreso = estudiante.fechaIngreso;
+  }
+
+  eliminar(id: number) {
+    if (!confirm('¿Eliminar este estudiante?')) {
+      return;
+    }
+
+    this.estudiantes = this.estudiantes.filter((e) => e.id !== id);
+    this.guardarEnStorage();
+
+    // Si se eliminó el estudiante que se estaba editando, se sale del modo edición
+    if (this.idEditando === id) {
+      this.limpiar();
+    }
   }
 
   cancelar() {
