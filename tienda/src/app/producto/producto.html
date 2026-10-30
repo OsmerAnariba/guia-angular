@@ -1,6 +1,34 @@
 <h2>Inventario de productos</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
+<h3>Nuevo producto</h3>
+
+<div>
+  <label>Código</label><br />
+  <input type="text" [(ngModel)]="codigo" />
+</div>
+
+<div>
+  <label>Nombre</label><br />
+  <input type="text" [(ngModel)]="nombre" />
+</div>
+
+<div>
+  <label>Precio (L)</label><br />
+  <input type="number" step="0.01" [(ngModel)]="precio" />
+</div>
+
+<div>
+  <label>Existencias</label><br />
+  <input type="number" [(ngModel)]="existencias" />
+</div>
+
+<button (click)="guardar()">Guardar</button>
+
+@if (mensaje) {
+  <p style="color: red">{{ mensaje }}</p>
+}
+
 <p>Total de registros: {{ productos.length }}</p>
 
 @if (productos.length === 0) {
