@@ -68,7 +68,6 @@ export class ProductoComponent implements OnInit {
     }
 
     if (this.idEditando !== null) {
-      // Modo actualizar: mismo ID, misma cantidad de filas
       const producto = this.productos.find((p) => p.id === this.idEditando);
       if (producto) {
         producto.codigo = this.codigo.trim();
@@ -77,7 +76,6 @@ export class ProductoComponent implements OnInit {
         producto.existencias = this.existencias;
       }
     } else {
-      // Modo crear: ID automático
       const nuevoId = this.productos.length
         ? Math.max(...this.productos.map((p) => p.id)) + 1
         : 1;
@@ -104,6 +102,20 @@ export class ProductoComponent implements OnInit {
     this.existencias = producto.existencias;
   }
 
+  eliminar(id: number) {
+    if (!confirm('¿Eliminar este producto?')) {
+      return;
+    }
+
+    this.productos = this.productos.filter((p) => p.id !== id);
+    this.guardarEnStorage();
+
+    // Si se eliminó el producto que se estaba editando, se sale del modo edición
+    if (this.idEditando === id) {
+      this.limpiar();
+    }
+  }
+
   cancelar() {
     this.mensaje = '';
     this.limpiar();
@@ -122,3 +134,4 @@ export class ProductoComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 }
+
