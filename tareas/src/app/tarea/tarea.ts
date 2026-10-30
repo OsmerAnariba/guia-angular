@@ -59,7 +59,6 @@ export class TareaComponent implements OnInit {
     }
 
     if (this.idEditando !== null) {
-      // Modo actualizar: mismo ID, misma cantidad de filas
       const tarea = this.tareas.find((t) => t.id === this.idEditando);
       if (tarea) {
         tarea.titulo = this.titulo.trim();
@@ -68,7 +67,6 @@ export class TareaComponent implements OnInit {
         tarea.estado = this.estado;
       }
     } else {
-      // Modo crear: ID automático
       const nuevoId = this.tareas.length
         ? Math.max(...this.tareas.map((t) => t.id)) + 1
         : 1;
@@ -93,6 +91,20 @@ export class TareaComponent implements OnInit {
     this.descripcion = tarea.descripcion;
     this.fechaLimite = tarea.fechaLimite;
     this.estado = tarea.estado;
+  }
+
+  eliminar(id: number) {
+    if (!confirm('¿Eliminar esta tarea?')) {
+      return;
+    }
+
+    this.tareas = this.tareas.filter((t) => t.id !== id);
+    this.guardarEnStorage();
+
+    // Si se eliminó la tarea que se estaba editando, se sale del modo edición
+    if (this.idEditando === id) {
+      this.limpiar();
+    }
   }
 
   cancelar() {
