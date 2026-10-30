@@ -63,7 +63,6 @@ export class MascotaComponent implements OnInit {
     }
 
     if (this.idEditando !== null) {
-      // Modo actualizar: se busca por ID, así solo cambia esa mascota
       const mascota = this.mascotas.find((m) => m.id === this.idEditando);
       if (mascota) {
         mascota.nombre = this.nombre.trim();
@@ -72,7 +71,6 @@ export class MascotaComponent implements OnInit {
         mascota.propietario = this.propietario.trim();
       }
     } else {
-      // Modo crear: ID automático
       const nuevoId = this.mascotas.length
         ? Math.max(...this.mascotas.map((m) => m.id)) + 1
         : 1;
@@ -97,6 +95,20 @@ export class MascotaComponent implements OnInit {
     this.especie = mascota.especie;
     this.edad = mascota.edad;
     this.propietario = mascota.propietario;
+  }
+
+  eliminar(id: number) {
+    if (!confirm('¿Eliminar esta mascota?')) {
+      return;
+    }
+
+    this.mascotas = this.mascotas.filter((m) => m.id !== id);
+    this.guardarEnStorage();
+
+    // Si se eliminó la mascota que se estaba editando, se sale del modo edición
+    if (this.idEditando === id) {
+      this.limpiar();
+    }
   }
 
   cancelar() {
