@@ -1,0 +1,17 @@
+<h2>Tareas - Iniciar sesión</h2>
+
+<div>
+  <label>Usuario</label><br />
+  <input type="text" [(ngModel)]="usuario" />
+</div>
+
+<div>
+  <label>Contraseña</label><br />
+  <input type="password" [(ngModel)]="contrasena" />
+</div>
+
+<button (click)="iniciarSesion()">Entrar</button>
+
+@if (mensaje) {
+  <p style="color: red">{{ mensaje }}</p>
+}
