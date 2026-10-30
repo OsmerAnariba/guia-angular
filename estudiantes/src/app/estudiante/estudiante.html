@@ -1,7 +1,7 @@
 <h2>Registro de estudiantes</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
-<h3>Nuevo estudiante</h3>
+<h3>{{ idEditando === null ? 'Nuevo estudiante' : 'Editar estudiante (ID ' + idEditando + ')' }}</h3>
 
 <div>
   <label>Cuenta</label><br />
@@ -23,7 +23,11 @@
   <input type="date" [(ngModel)]="fechaIngreso" />
 </div>
 
-<button (click)="guardar()">Guardar</button>
+<button (click)="guardar()">{{ idEditando === null ? 'Guardar' : 'Actualizar' }}</button>
+
+@if (idEditando !== null) {
+  <button (click)="cancelar()">Cancelar</button>
+}
 
 @if (mensaje) {
   <p style="color: red">{{ mensaje }}</p>
@@ -42,6 +46,7 @@
         <th>Nombre</th>
         <th>Carrera</th>
         <th>Fecha de ingreso</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -52,6 +57,9 @@
           <td>{{ estudiante.nombre }}</td>
           <td>{{ estudiante.carrera }}</td>
           <td>{{ estudiante.fechaIngreso }}</td>
+          <td>
+            <button (click)="editar(estudiante)">Editar</button>
+          </td>
         </tr>
       }
     </tbody>

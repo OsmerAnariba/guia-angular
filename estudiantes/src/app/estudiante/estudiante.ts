@@ -24,6 +24,7 @@ export class EstudianteComponent implements OnInit {
   carrera = '';
   fechaIngreso = '';
   mensaje = '';
+  idEditando: number | null = null;
 
   constructor(private router: Router) {}
 
@@ -57,19 +58,45 @@ export class EstudianteComponent implements OnInit {
       return;
     }
 
-    const nuevoId = this.estudiantes.length
-      ? Math.max(...this.estudiantes.map((e) => e.id)) + 1
-      : 1;
+    if (this.idEditando !== null) {
+      // Modo actualizar: mismo ID, misma cantidad de filas
+      const estudiante = this.estudiantes.find((e) => e.id === this.idEditando);
+      if (estudiante) {
+        estudiante.cuenta = this.cuenta.trim();
+        estudiante.nombre = this.nombre.trim();
+        estudiante.carrera = this.carrera.trim();
+        estudiante.fechaIngreso = this.fechaIngreso;
+      }
+    } else {
+      // Modo crear: ID automático
+      const nuevoId = this.estudiantes.length
+        ? Math.max(...this.estudiantes.map((e) => e.id)) + 1
+        : 1;
 
-    this.estudiantes.push({
-      id: nuevoId,
-      cuenta: this.cuenta.trim(),
-      nombre: this.nombre.trim(),
-      carrera: this.carrera.trim(),
-      fechaIngreso: this.fechaIngreso,
-    });
+      this.estudiantes.push({
+        id: nuevoId,
+        cuenta: this.cuenta.trim(),
+        nombre: this.nombre.trim(),
+        carrera: this.carrera.trim(),
+        fechaIngreso: this.fechaIngreso,
+      });
+    }
 
     this.guardarEnStorage();
+    this.limpiar();
+  }
+
+  editar(estudiante: Estudiante) {
+    this.mensaje = '';
+    this.idEditando = estudiante.id;
+    this.cuenta = estudiante.cuenta;
+    this.nombre = estudiante.nombre;
+    this.carrera = estudiante.carrera;
+    this.fechaIngreso = estudiante.fechaIngreso;
+  }
+
+  cancelar() {
+    this.mensaje = '';
     this.limpiar();
   }
 
@@ -78,6 +105,7 @@ export class EstudianteComponent implements OnInit {
     this.nombre = '';
     this.carrera = '';
     this.fechaIngreso = '';
+    this.idEditando = null;
   }
 
   cerrarSesion() {
