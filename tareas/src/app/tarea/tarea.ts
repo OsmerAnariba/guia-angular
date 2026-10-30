@@ -1,9 +1,40 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+interface Tarea {
+  id: number;
+  titulo: string;
+  descripcion: string;
+  fechaLimite: string;
+  estado: string;
+}
 
 @Component({
-  imports: [],
   selector: 'app-tarea',
-  styleUrl: './tarea.css',
+  imports: [],
   templateUrl: './tarea.html',
+  styleUrl: './tarea.css',
 })
-export class TareaComponent {}
+export class TareaComponent implements OnInit {
+  tareas: Tarea[] = [];
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    if (!localStorage.getItem('sesionTareas')) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.cargar();
+  }
+
+  cargar() {
+    const datos = localStorage.getItem('agendaTareas');
+    this.tareas = datos ? JSON.parse(datos) : [];
+  }
+
+  cerrarSesion() {
+    localStorage.removeItem('sesionTareas');
+    this.router.navigate(['/login']);
+  }
+}
