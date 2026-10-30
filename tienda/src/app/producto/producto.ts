@@ -24,6 +24,7 @@ export class ProductoComponent implements OnInit {
   precio: number | null = null;
   existencias: number | null = null;
   mensaje = '';
+  idEditando: number | null = null;
 
   constructor(private router: Router) {}
 
@@ -66,19 +67,45 @@ export class ProductoComponent implements OnInit {
       return;
     }
 
-    const nuevoId = this.productos.length
-      ? Math.max(...this.productos.map((p) => p.id)) + 1
-      : 1;
+    if (this.idEditando !== null) {
+      // Modo actualizar: mismo ID, misma cantidad de filas
+      const producto = this.productos.find((p) => p.id === this.idEditando);
+      if (producto) {
+        producto.codigo = this.codigo.trim();
+        producto.nombre = this.nombre.trim();
+        producto.precio = this.precio;
+        producto.existencias = this.existencias;
+      }
+    } else {
+      // Modo crear: ID automático
+      const nuevoId = this.productos.length
+        ? Math.max(...this.productos.map((p) => p.id)) + 1
+        : 1;
 
-    this.productos.push({
-      id: nuevoId,
-      codigo: this.codigo.trim(),
-      nombre: this.nombre.trim(),
-      precio: this.precio,
-      existencias: this.existencias,
-    });
+      this.productos.push({
+        id: nuevoId,
+        codigo: this.codigo.trim(),
+        nombre: this.nombre.trim(),
+        precio: this.precio,
+        existencias: this.existencias,
+      });
+    }
 
     this.guardarEnStorage();
+    this.limpiar();
+  }
+
+  editar(producto: Producto) {
+    this.mensaje = '';
+    this.idEditando = producto.id;
+    this.codigo = producto.codigo;
+    this.nombre = producto.nombre;
+    this.precio = producto.precio;
+    this.existencias = producto.existencias;
+  }
+
+  cancelar() {
+    this.mensaje = '';
     this.limpiar();
   }
 
@@ -87,6 +114,7 @@ export class ProductoComponent implements OnInit {
     this.nombre = '';
     this.precio = null;
     this.existencias = null;
+    this.idEditando = null;
   }
 
   cerrarSesion() {
