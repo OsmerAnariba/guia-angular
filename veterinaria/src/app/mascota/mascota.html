@@ -1,6 +1,34 @@
 <h2>Registro de mascotas</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
+<h3>Nueva mascota</h3>
+
+<div>
+  <label>Nombre</label><br />
+  <input type="text" [(ngModel)]="nombre" />
+</div>
+
+<div>
+  <label>Especie</label><br />
+  <input type="text" [(ngModel)]="especie" />
+</div>
+
+<div>
+  <label>Edad (años)</label><br />
+  <input type="number" [(ngModel)]="edad" />
+</div>
+
+<div>
+  <label>Propietario</label><br />
+  <input type="text" [(ngModel)]="propietario" />
+</div>
+
+<button (click)="guardar()">Guardar</button>
+
+@if (mensaje) {
+  <p style="color: red">{{ mensaje }}</p>
+}
+
 <p>Total de registros: {{ mascotas.length }}</p>
 
 @if (mascotas.length === 0) {
