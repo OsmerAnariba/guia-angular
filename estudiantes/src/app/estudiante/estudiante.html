@@ -1,6 +1,34 @@
 <h2>Registro de estudiantes</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
+<h3>Nuevo estudiante</h3>
+
+<div>
+  <label>Cuenta</label><br />
+  <input type="text" [(ngModel)]="cuenta" />
+</div>
+
+<div>
+  <label>Nombre</label><br />
+  <input type="text" [(ngModel)]="nombre" />
+</div>
+
+<div>
+  <label>Carrera</label><br />
+  <input type="text" [(ngModel)]="carrera" />
+</div>
+
+<div>
+  <label>Fecha de ingreso</label><br />
+  <input type="date" [(ngModel)]="fechaIngreso" />
+</div>
+
+<button (click)="guardar()">Guardar</button>
+
+@if (mensaje) {
+  <p style="color: red">{{ mensaje }}</p>
+}
+
 <p>Total de registros: {{ estudiantes.length }}</p>
 
 @if (estudiantes.length === 0) {
