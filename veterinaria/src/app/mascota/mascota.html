@@ -1,7 +1,7 @@
 <h2>Registro de mascotas</h2>
 <button (click)="cerrarSesion()">Cerrar sesión</button>
 
-<h3>Nueva mascota</h3>
+<h3>{{ idEditando === null ? 'Nueva mascota' : 'Editar mascota (ID ' + idEditando + ')' }}</h3>
 
 <div>
   <label>Nombre</label><br />
@@ -23,7 +23,11 @@
   <input type="text" [(ngModel)]="propietario" />
 </div>
 
-<button (click)="guardar()">Guardar</button>
+<button (click)="guardar()">{{ idEditando === null ? 'Guardar' : 'Actualizar' }}</button>
+
+@if (idEditando !== null) {
+  <button (click)="cancelar()">Cancelar</button>
+}
 
 @if (mensaje) {
   <p style="color: red">{{ mensaje }}</p>
@@ -42,6 +46,7 @@
         <th>Especie</th>
         <th>Edad (años)</th>
         <th>Propietario</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -52,6 +57,9 @@
           <td>{{ mascota.especie }}</td>
           <td>{{ mascota.edad }}</td>
           <td>{{ mascota.propietario }}</td>
+          <td>
+            <button (click)="editar(mascota)">Editar</button>
+          </td>
         </tr>
       }
     </tbody>

@@ -24,6 +24,7 @@ export class MascotaComponent implements OnInit {
   edad: number | null = null;
   propietario = '';
   mensaje = '';
+  idEditando: number | null = null;
 
   constructor(private router: Router) {}
 
@@ -61,19 +62,45 @@ export class MascotaComponent implements OnInit {
       return;
     }
 
-    const nuevoId = this.mascotas.length
-      ? Math.max(...this.mascotas.map((m) => m.id)) + 1
-      : 1;
+    if (this.idEditando !== null) {
+      // Modo actualizar: se busca por ID, así solo cambia esa mascota
+      const mascota = this.mascotas.find((m) => m.id === this.idEditando);
+      if (mascota) {
+        mascota.nombre = this.nombre.trim();
+        mascota.especie = this.especie.trim();
+        mascota.edad = this.edad;
+        mascota.propietario = this.propietario.trim();
+      }
+    } else {
+      // Modo crear: ID automático
+      const nuevoId = this.mascotas.length
+        ? Math.max(...this.mascotas.map((m) => m.id)) + 1
+        : 1;
 
-    this.mascotas.push({
-      id: nuevoId,
-      nombre: this.nombre.trim(),
-      especie: this.especie.trim(),
-      edad: this.edad,
-      propietario: this.propietario.trim(),
-    });
+      this.mascotas.push({
+        id: nuevoId,
+        nombre: this.nombre.trim(),
+        especie: this.especie.trim(),
+        edad: this.edad,
+        propietario: this.propietario.trim(),
+      });
+    }
 
     this.guardarEnStorage();
+    this.limpiar();
+  }
+
+  editar(mascota: Mascota) {
+    this.mensaje = '';
+    this.idEditando = mascota.id;
+    this.nombre = mascota.nombre;
+    this.especie = mascota.especie;
+    this.edad = mascota.edad;
+    this.propietario = mascota.propietario;
+  }
+
+  cancelar() {
+    this.mensaje = '';
     this.limpiar();
   }
 
@@ -82,6 +109,7 @@ export class MascotaComponent implements OnInit {
     this.especie = '';
     this.edad = null;
     this.propietario = '';
+    this.idEditando = null;
   }
 
   cerrarSesion() {
