@@ -24,6 +24,7 @@ export class TareaComponent implements OnInit {
   fechaLimite = '';
   estado = 'Pendiente';
   mensaje = '';
+  idEditando: number | null = null;
 
   constructor(private router: Router) {}
 
@@ -57,19 +58,45 @@ export class TareaComponent implements OnInit {
       return;
     }
 
-    const nuevoId = this.tareas.length
-      ? Math.max(...this.tareas.map((t) => t.id)) + 1
-      : 1;
+    if (this.idEditando !== null) {
+      // Modo actualizar: mismo ID, misma cantidad de filas
+      const tarea = this.tareas.find((t) => t.id === this.idEditando);
+      if (tarea) {
+        tarea.titulo = this.titulo.trim();
+        tarea.descripcion = this.descripcion.trim();
+        tarea.fechaLimite = this.fechaLimite;
+        tarea.estado = this.estado;
+      }
+    } else {
+      // Modo crear: ID automático
+      const nuevoId = this.tareas.length
+        ? Math.max(...this.tareas.map((t) => t.id)) + 1
+        : 1;
 
-    this.tareas.push({
-      id: nuevoId,
-      titulo: this.titulo.trim(),
-      descripcion: this.descripcion.trim(),
-      fechaLimite: this.fechaLimite,
-      estado: this.estado,
-    });
+      this.tareas.push({
+        id: nuevoId,
+        titulo: this.titulo.trim(),
+        descripcion: this.descripcion.trim(),
+        fechaLimite: this.fechaLimite,
+        estado: this.estado,
+      });
+    }
 
     this.guardarEnStorage();
+    this.limpiar();
+  }
+
+  editar(tarea: Tarea) {
+    this.mensaje = '';
+    this.idEditando = tarea.id;
+    this.titulo = tarea.titulo;
+    this.descripcion = tarea.descripcion;
+    this.fechaLimite = tarea.fechaLimite;
+    this.estado = tarea.estado;
+  }
+
+  cancelar() {
+    this.mensaje = '';
     this.limpiar();
   }
 
@@ -78,6 +105,7 @@ export class TareaComponent implements OnInit {
     this.descripcion = '';
     this.fechaLimite = '';
     this.estado = 'Pendiente';
+    this.idEditando = null;
   }
 
   cerrarSesion() {
